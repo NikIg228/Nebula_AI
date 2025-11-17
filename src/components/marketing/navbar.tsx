@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export function Navbar() {
   return (
@@ -13,14 +13,26 @@ export function Navbar() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center gap-3"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#8A2FFF] to-[#A855FF] text-lg font-bold text-white shadow-lg shadow-[#8A2FFF]/50">
-            N
-          </span>
-          <span className="text-lg font-bold text-foreground">
-            Nebula <span className="bg-gradient-to-r from-[#8A2FFF] to-[#C084FC] bg-clip-text text-transparent">AI</span>
-          </span>
+          <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
+            <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f011f] via-[#160028] to-[#040008] shadow-lg shadow-[#8A2FFF]/40 ring-1 ring-[#8A2FFF]/30">
+              <Image
+                src="/logo.png"
+                alt="Логотип Nebula AI"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain"
+                sizes="40px"
+                priority
+              />
+            </span>
+            <span className="text-lg font-bold text-foreground">
+              Nebula{" "}
+              <span className="bg-gradient-to-r from-[#8A2FFF] to-[#C084FC] bg-clip-text text-transparent">
+                AI
+              </span>
+            </span>
+          </Link>
         </motion.div>
         <motion.nav
           initial={{ opacity: 0, y: -8 }}
@@ -59,7 +71,6 @@ export function Navbar() {
           transition={{ delay: 0.2, duration: 0.3 }}
           className="flex items-center gap-3"
         >
-          <ThemeToggle />
           <Button 
             size="sm" 
             asChild

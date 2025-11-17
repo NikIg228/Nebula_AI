@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/marketing/navbar";
 import { Hero } from "@/components/marketing/hero";
 import { Features } from "@/components/marketing/features";
 import { Pricing } from "@/components/marketing/pricing";
@@ -9,7 +8,6 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       <div className="relative z-10 flex min-h-screen flex-col">
-        <Navbar />
         <main className="flex flex-1 flex-col">
           <Hero />
           <div id="features">
@@ -28,7 +26,8 @@ export default function Home() {
                 Nebula AI © {new Date().getFullYear()}
               </p>
               <p className="text-xs text-muted-foreground">
-                AI-ассистент нового поколения для команд и бизнеса
+              Всё, что нужно для
+              профессиональной работы с документами
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-6 text-sm">

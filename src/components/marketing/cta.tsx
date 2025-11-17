@@ -17,7 +17,7 @@ export function CallToAction() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.45 }}
-          className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#8A2FFF]/30 bg-[#8A2FFF]/10 px-4 py-1.5 text-sm text-[#C084FC] backdrop-blur-md"
+          className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#8A2FFF]/30 px-4 py-1.5 text-sm text-[#C084FC]"
         >
           <Sparkles className="h-4 w-4" />
           Готовы начать?
@@ -30,10 +30,10 @@ export function CallToAction() {
           transition={{ delay: 0.1, duration: 0.45 }}
           className="text-balance text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
         >
-          <span className="text-foreground">Создайте своего</span>
+          <span className="text-foreground">Быстрая регистрация —</span>
           <br />
           <span className="bg-gradient-to-r from-[#8A2FFF] via-[#A855FF] to-[#C084FC] bg-clip-text text-transparent">
-            AI-ассистента за минуты
+            загрузите Word, PDF или Excel и получите анализ за секунды
           </span>
         </motion.h2>
         
@@ -44,8 +44,7 @@ export function CallToAction() {
           transition={{ delay: 0.16, duration: 0.45 }}
           className="mt-6 text-lg leading-relaxed text-muted-foreground"
         >
-          Бесплатная регистрация, готовый интерфейс и простая интеграция с Supabase. 
-          Начните с Starter-тарифа и масштабируйтесь по мере роста команды.
+          Nebula берёт на себя рутинные правки, сравнения и конвертацию. Просто загрузите документы — сервис подготовит отчёты, шаблоны и таблицы, а вы получите результат в нужном формате.
         </motion.p>
         
         <motion.div
@@ -56,7 +55,7 @@ export function CallToAction() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Button size="lg" asChild className="neon-button w-full sm:w-auto text-white font-semibold">
-            <Link href="/chat">Создать первый чат</Link>
+            <Link href="/chat">Обработать документ</Link>
           </Button>
           <Button 
             size="lg" 
@@ -64,7 +63,7 @@ export function CallToAction() {
             asChild
             className="w-full sm:w-auto border-[#8A2FFF]/30 bg-transparent text-foreground hover:bg-[#8A2FFF]/10 hover:border-[#8A2FFF]/50 hover:text-[#C084FC] transition-all"
           >
-            <Link href="/about">Узнать больше</Link>
+            <Link href="/about">Посмотреть возможности</Link>
           </Button>
         </motion.div>
       </div>

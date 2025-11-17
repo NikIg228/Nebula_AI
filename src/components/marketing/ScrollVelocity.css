@@ -1,0 +1,39 @@
+.parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroller {
+  display: flex;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--font-inter, "Inter", system-ui, -apple-system, sans-serif);
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--muted-foreground);
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.25));
+  gap: 0;
+}
+
+.scroller span {
+  flex-shrink: 0;
+  display: inline-block;
+  padding-right: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .scroller {
+    font-size: 1.35rem;
+    line-height: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .scroller {
+    font-size: 1.5rem;
+    line-height: 2.25rem;
+  }
+}
+

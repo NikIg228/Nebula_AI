@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/app-providers";
 import DarkVeil from "@/components/DarkVeil";
+import { GlobalHeader } from "@/components/layout/global-header";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,12 +22,16 @@ export const metadata: Metadata = {
   description:
     "Создайте собственный AI-ассистент с памятью, загрузкой файлов и продвинутым управлением контекстом.",
   metadataBase: new URL("https://nebula-ai.app"),
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
+  icons: [
+    { rel: "icon", url: "/logo.png", type: "image/png" },
+    { rel: "apple-touch-icon", url: "/logo.png" },
+  ],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -42,9 +47,12 @@ export default function RootLayout({
         <div className="fixed inset-0 z-0" style={{ width: '100vw', height: '100vh' }}>
           <DarkVeil />
         </div>
-        <div className="relative z-10">
-          <AppProviders>{children}</AppProviders>
-        </div>
+        <AppProviders>
+          <div className="relative z-10 flex min-h-screen flex-col">
+            <GlobalHeader />
+            <div className="flex-1">{children}</div>
+          </div>
+        </AppProviders>
       </body>
     </html>
   );

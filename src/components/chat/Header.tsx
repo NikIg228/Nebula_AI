@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useChatStore } from "@/store/chat-store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -71,7 +70,6 @@ export function Header({ sidebarOpen, onToggleSidebar }: HeaderProps) {
           </TooltipContent>
         </Tooltip>
         <div className="hidden sm:block">
-          <ThemeToggle />
         </div>
         <Tooltip>
           <TooltipTrigger asChild>

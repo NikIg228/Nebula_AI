@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Pricing } from "@/components/marketing/pricing";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export const metadata: Metadata = {
   title: "Тарифы Nebula AI",
@@ -13,19 +12,6 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <div className="min-h-screen text-foreground">
-      <header className="border-b border-border/60 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-          <Link href="/" className="text-lg font-semibold">
-            Nebula AI
-          </Link>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Button size="sm" asChild>
-              <Link href="/chat">Начать чат</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
       <main>
         <Pricing />
         <section className="border-t border-border/60 bg-background py-16">

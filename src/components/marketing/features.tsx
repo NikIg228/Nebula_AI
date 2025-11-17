@@ -1,50 +1,50 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LucideBrain, LucideFileText, LucideSparkles, LucideCode, LucideUsers, LucideZap } from "lucide-react";
+import { FilePenLine, Table, Layers, FileSignature, FileDiff, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const features = [
   {
-    title: "Контекстная память",
+    title: "Редактирование документов",
     description:
-      "AI запоминает историю диалогов, переключается между проектами и сохраняет важные детали в Supabase. Каждый чат — это отдельный контекст с собственной памятью.",
-    icon: LucideBrain,
+      "Умные правки Word, PDF и текстовых файлов: стиль, факты, формулировки, вычитка и согласование правок в одном интерфейсе.",
+    icon: FilePenLine,
     gradient: "from-[#8A2FFF] to-[#A855FF]",
   },
   {
-    title: "Работа с файлами",
+    title: "Извлечение данных",
     description:
-      "Загружайте PDF, DOCX, изображения и CSV. Автоматическая конвертация в текст, анализ содержимого и использование в контексте диалога. Поддержка больших документов.",
-    icon: LucideFileText,
+      "Таблицы из PDF и сканов автоматически превращаются в Excel. Nebula распознаёт структуру и проверяет корректность чисел.",
+    icon: Table,
     gradient: "from-[#A855FF] to-[#C084FC]",
   },
   {
-    title: "Гибкие режимы общения",
+    title: "Структурирование информации",
     description:
-      "Быстрые ответы, глубокое исследование, экспертный разбор, code-assistant. Настраивайте тон, модель и стиль общения под задачи команды.",
-    icon: LucideSparkles,
+      "Автоматическое оглавление, секции и сводки для длинных документов. AI выстраивает логичную структуру и подсвечивает важные фрагменты.",
+    icon: Layers,
     gradient: "from-[#C084FC] to-[#8A2FFF]",
   },
   {
-    title: "Модели уровня ChatGPT",
+    title: "Генерация документов",
     description:
-      "Поддержка GPT-4o, Claude 3, Grok и других продвинутых LLM. Выбирайте модель под задачу или используйте кастомные API-прокси.",
-    icon: LucideZap,
+      "Шаблоны договоров, отчётов и презентаций. Загружайте данные — Nebula собирает готовые документы с нужным стилем.",
+    icon: FileSignature,
     gradient: "from-[#8A2FFF] to-[#C084FC]",
   },
   {
-    title: "Командная работа",
+    title: "Сравнение версий",
     description:
-      "Многопользовательские чаты, общая память, права доступа и теги проектов. AI становится частью команды, а не просто инструментом.",
-    icon: LucideUsers,
+      "Мгновенный diff между двумя документами с подсветкой формулировок, чисел и правок. Экспорт отчёта об отличиях.",
+    icon: FileDiff,
     gradient: "from-[#A855FF] to-[#8A2FFF]",
   },
   {
-    title: "Готовый UI и интеграция",
+    title: "Конвертация форматов",
     description:
-      "Полностью готовый интерфейс чата, интеграция с Supabase из коробки, API для связи с OpenAI. Без сложной настройки — начните за минуты.",
-    icon: LucideCode,
+      "Word ↔ PDF, PDF → Excel, PPT → текст. Все встроенные преобразования с сохранением форматирования и проверкой данных.",
+    icon: Repeat,
     gradient: "from-[#C084FC] to-[#A855FF]",
   },
 ] as const;
@@ -67,7 +67,7 @@ export function Features() {
             <span className="text-foreground">Всё, что нужно для</span>
             <br />
             <span className="bg-gradient-to-r from-[#8A2FFF] via-[#A855FF] to-[#C084FC] bg-clip-text text-transparent">
-              продуктивной работы с AI
+              профессиональной работы с документами
             </span>
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
@@ -86,7 +86,7 @@ export function Features() {
               transition={{ delay: index * 0.08, duration: 0.45 }}
               className="group"
             >
-              <Card className="glass-card h-full transition-all duration-300 hover:border-[#8A2FFF]/40 hover:shadow-[0_0_30px_rgba(138,47,255,0.2)]">
+              <Card className="h-full border-[#8A2FFF]/20 bg-transparent shadow-none transition-all duration-300 hover:border-[#8A2FFF]/40 hover:shadow-[0_0_30px_rgba(138,47,255,0.15)]">
                 <CardHeader className="space-y-4">
                   <div className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${feature.gradient} text-white shadow-lg`}>
                     <feature.icon className="h-6 w-6" />
