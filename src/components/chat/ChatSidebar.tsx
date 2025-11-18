@@ -1,12 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Plus,
-  Settings,
-  User,
-  Home,
-} from "lucide-react";
+import { Plus, Home, Search, Image } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,6 +12,8 @@ import { ChatList } from "@/components/chat/ChatList";
 import { useChatStore } from "@/store/chat-store";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { SearchChatsModal } from "./SearchChatsModal";
+import { LibraryModal } from "./LibraryModal";
 
 type ChatSidebarProps = {
   isOpen: boolean;
@@ -36,27 +34,21 @@ export function ChatSidebar({
   const createSession = useChatStore((state) => state.createSession);
   const selectSession = useChatStore((state) => state.selectSession);
   const removeSession = useChatStore((state) => state.removeSession);
-  const setSettingsOpen = useChatStore((state) => state.setSettingsOpen);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   const handleNewChat = () => {
     const sessionId = createSession("Первый диалог с Nebula");
     selectSession(sessionId);
-    onClose?.();
   };
 
   const handleSelectSession = (sessionId: string) => {
     selectSession(sessionId);
-    onClose?.();
   };
 
   const handleDeleteSession = (sessionId: string) => {
     removeSession(sessionId);
     toast.success("Диалог удалён");
-  };
-
-  const handleOpenSettings = () => {
-    setSettingsOpen(true);
-    onClose?.();
   };
 
   const sidebarContent = (
@@ -87,6 +79,22 @@ export function ChatSidebar({
         </Tooltip>
       </div>
 
+      {/* Search and Library Buttons */}
+      <div className="px-2.5 md:px-3 pb-2.5 md:pb-3 border-b border-[#8A2FFF]/10 space-y-1">
+        <SidebarButton
+          icon={Search}
+          label="Поиск в чатах"
+          onClick={() => setIsSearchOpen(true)}
+          tooltip="Поиск по всем чатам"
+        />
+        <SidebarButton
+          icon={Image}
+          label="Библиотека"
+          onClick={() => setIsLibraryOpen(true)}
+          tooltip="Все изображения и документы"
+        />
+      </div>
+
       {/* Chat List */}
       <ScrollArea className="flex-1 px-2">
         <ChatList
@@ -99,18 +107,6 @@ export function ChatSidebar({
 
       {/* Bottom Actions */}
       <div className="border-t border-[#8A2FFF]/10 p-2.5 md:p-3 space-y-1">
-        <SidebarButton
-          icon={Settings}
-          label="Настройки"
-          onClick={handleOpenSettings}
-          tooltip="Открыть настройки"
-        />
-        <SidebarButton
-          icon={User}
-          label="Профиль"
-          onClick={() => toast.info("Профиль появится скоро")}
-          tooltip="Профиль пользователя"
-        />
         <SidebarButton
           icon={Home}
           label="к Главной"
@@ -176,6 +172,16 @@ export function ChatSidebar({
         )}
       </AnimatePresence>
     </motion.aside>
+      <SearchChatsModal isOpen={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      <LibraryModal isOpen={isLibraryOpen} onOpenChange={setIsLibraryOpen} />
+    </>
+  );
+}
+
+export function ChatSidebarWithModals(props: ChatSidebarProps) {
+  return (
+    <>
+      <ChatSidebar {...props} />
     </>
   );
 }

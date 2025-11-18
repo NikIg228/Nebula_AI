@@ -33,12 +33,6 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-6 text-sm">
               <a 
                 className="transition-colors text-muted-foreground hover:text-[#C084FC]" 
-                href="mailto:hello@nebula.ai"
-              >
-                Контакты
-              </a>
-              <a 
-                className="transition-colors text-muted-foreground hover:text-[#C084FC]" 
                 href="/pricing"
               >
                 Тарифы
@@ -54,6 +48,12 @@ export default function Home() {
                 href="/#faq"
               >
                 FAQ
+              </a>
+              <a 
+                className="transition-colors text-muted-foreground hover:text-[#C084FC]" 
+                href="/policies"
+              >
+                Условия и Политики
               </a>
             </div>
           </div>

@@ -37,12 +37,12 @@ function buildMessages(payload: ChatCompletionPayload) {
 
 function createFallbackStream(payload: ChatCompletionPayload) {
   const encoder = new TextEncoder();
-  const greeting =
-    payload.mode === "fast"
-      ? "Готов ответить быстро и по делу."
-      : payload.mode === "learn"
-      ? "Давайте разберём вопрос шаг за шагом и закрепим знания."
-      : "Исследуем тему подробно, анализируя детали и контекст.";
+  const greetingMap: Record<string, string> = {
+    agent: "Готов быть вашим ассистентом и вести диалог в любом формате.",
+    fast: "Готов ответить быстро и по делу.",
+    research: "Исследуем тему подробно, анализируя детали и контекст.",
+  };
+  const greeting = greetingMap[payload.mode] ?? greetingMap.agent;
 
   const segments = [
     `Привет! Я Nebula, ваш AI-ассистент. ${greeting}`,

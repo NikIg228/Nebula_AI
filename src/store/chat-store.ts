@@ -10,10 +10,12 @@ import {
   type ChatModel,
   type TonePreset,
   type InterfaceAccent,
+  type ChatFolder,
 } from "@/types/chat";
 
 type ChatStoreState = {
   sessions: ChatSession[];
+  folders: ChatFolder[];
   messages: Record<string, ChatMessage[]>;
   activeSessionId: string | null;
   isLoading: boolean;
@@ -33,6 +35,12 @@ type ChatStoreActions = {
   ) => void;
   removeMessage: (sessionId: string, messageId: string) => void;
   renameSession: (sessionId: string, title: string) => void;
+  archiveSession: (sessionId: string) => void;
+  unarchiveSession: (sessionId: string) => void;
+  moveSessionToFolder: (sessionId: string, folderId: string | null) => void;
+  createFolder: (name: string) => string;
+  renameFolder: (folderId: string, name: string) => void;
+  removeFolder: (folderId: string) => void;
   setLoading: (value: boolean) => void;
   setSettingsOpen: (value: boolean) => void;
   updateSettings: (patch: Partial<ChatSettings>) => void;
@@ -42,7 +50,7 @@ type ChatStoreActions = {
 
 const defaultSettings: ChatSettings = {
   model: "gpt-4o",
-  mode: "explore",
+  mode: "agent",
   tone: "friendly",
   accent: "violet",
   language: "ru",
@@ -67,6 +75,7 @@ const initialSession = createDraftSession("Первый диалог с Nebula")
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(
   (set) => ({
     sessions: [initialSession],
+    folders: [],
     messages: {},
     activeSessionId: initialSession.id,
     isLoading: false,
@@ -146,6 +155,62 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(
       set((state) => ({
         sessions: state.sessions.map((session) =>
           session.id === sessionId ? { ...session, title } : session
+        ),
+      }));
+    },
+
+    archiveSession: (sessionId) => {
+      set((state) => ({
+        sessions: state.sessions.map((session) =>
+          session.id === sessionId ? { ...session, archived: true } : session
+        ),
+      }));
+    },
+
+    unarchiveSession: (sessionId) => {
+      set((state) => ({
+        sessions: state.sessions.map((session) =>
+          session.id === sessionId ? { ...session, archived: false } : session
+        ),
+      }));
+    },
+
+    moveSessionToFolder: (sessionId, folderId) => {
+      set((state) => ({
+        sessions: state.sessions.map((session) =>
+          session.id === sessionId ? { ...session, folderId } : session
+        ),
+      }));
+    },
+
+    createFolder: (name) => {
+      const folder: ChatFolder = {
+        id: uuid(),
+        name,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      set((state) => ({
+        folders: [...state.folders, folder],
+      }));
+      return folder.id;
+    },
+
+    renameFolder: (folderId, name) => {
+      set((state) => ({
+        folders: state.folders.map((folder) =>
+          folder.id === folderId
+            ? { ...folder, name, updatedAt: new Date().toISOString() }
+            : folder
+        ),
+      }));
+    },
+
+    removeFolder: (folderId) => {
+      set((state) => ({
+        folders: state.folders.filter((folder) => folder.id !== folderId),
+        sessions: state.sessions.map((session) =>
+          session.folderId === folderId ? { ...session, folderId: null } : session
         ),
       }));
     },

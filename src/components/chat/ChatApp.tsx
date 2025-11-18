@@ -6,6 +6,8 @@ import { Header } from "@/components/chat/Header";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { ChatSettingsModal } from "@/components/chat/ChatSettingsModal";
+import { ChatModeIndicator } from "@/components/chat/ChatModeIndicator";
+import { MODES } from "@/data/modes";
 import { useChatStore } from "@/store/chat-store";
 import { useChat } from "@/hooks/use-chat";
 import { ChatFile } from "@/types/chat";
@@ -19,6 +21,12 @@ export function ChatApp() {
   const sessions = useChatStore((state) => state.sessions);
   const activeSessionId = useChatStore((state) => state.activeSessionId);
   const removeMessage = useChatStore((state) => state.removeMessage);
+  const currentMode = useChatStore((state) => state.settings.mode);
+  const activeModeDefinition = useMemo(
+    () => MODES.find((mode) => mode.id === currentMode) ?? MODES[0],
+    [currentMode]
+  );
+  const ModeIcon = activeModeDefinition.icon;
 
   const sessionId = useMemo(
     () => activeSessionId ?? sessions[0]?.id ?? null,
@@ -106,6 +114,15 @@ export function ChatApp() {
             }}
           />
           <div className="flex flex-1 flex-col">
+            <div className="px-3 md:px-6 pt-3">
+              <ChatModeIndicator
+                mode={{
+                  id: activeModeDefinition.id,
+                  name: activeModeDefinition.name,
+                  icon: <ModeIcon className="h-4 w-4 text-white" />,
+                }}
+              />
+            </div>
             <ChatContainer
               messages={messages}
               isStreaming={isStreaming}

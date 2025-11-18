@@ -2,7 +2,7 @@ export type ChatRole = "user" | "assistant" | "system";
 
 export type ChatModel = "gpt-4o" | "claude-3" | "grok-beta";
 
-export type ChatMode = "explore" | "fast" | "learn";
+export type ChatMode = "agent" | "fast" | "research";
 
 export type TonePreset = "friendly" | "formal" | "casual";
 
@@ -38,6 +38,15 @@ export type ChatSession = {
   updatedAt: string;
   summary?: string;
   pinned?: boolean;
+  archived?: boolean;
+  folderId?: string | null;
+};
+
+export type ChatFolder = {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ChatSettings = {

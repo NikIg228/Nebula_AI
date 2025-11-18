@@ -2,9 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useChatStore } from "@/store/chat-store";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Settings, Menu, Sparkles, X } from "lucide-react";
+import { Menu, Sparkles, X } from "lucide-react";
 
 type HeaderProps = {
   sidebarOpen: boolean;
@@ -12,8 +10,6 @@ type HeaderProps = {
 };
 
 export function Header({ sidebarOpen, onToggleSidebar }: HeaderProps) {
-  const setSettingsOpen = useChatStore((state) => state.setSettingsOpen);
-
   return (
     <header className="relative z-20 flex h-14 md:h-16 items-center justify-between border-b border-[#8A2FFF]/20 glass-card backdrop-blur-xl px-3 md:px-6">
       {/* Glow line at top */}
@@ -52,38 +48,7 @@ export function Header({ sidebarOpen, onToggleSidebar }: HeaderProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-1.5 md:gap-3 flex-shrink-0">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 md:h-10 md:w-10 rounded-full hover:bg-[#8A2FFF]/10 hover:text-[#C084FC] transition-all"
-              onClick={() => setSettingsOpen(true)}
-              aria-label="Открыть настройки"
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <p>Открыть настройки</p>
-          </TooltipContent>
-        </Tooltip>
-        <div className="hidden sm:block">
-        </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Avatar className="h-8 w-8 md:h-9 md:w-9 border border-[#8A2FFF]/30 cursor-pointer hover:border-[#8A2FFF]/50 transition-all">
-              <AvatarFallback className="bg-gradient-to-br from-[#8A2FFF] to-[#A855FF] text-[10px] md:text-xs font-semibold text-white">
-                NK
-              </AvatarFallback>
-            </Avatar>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <p>Профиль пользователя</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
+      <div className="flex-1" />
     </header>
   );
 }

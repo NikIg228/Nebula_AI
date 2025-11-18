@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatMessage } from "@/types/chat";
 
@@ -54,26 +54,21 @@ export function ChatContainer({
     <div className="flex flex-1 flex-col overflow-hidden">
       <div
         ref={viewportRef}
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto bg-gradient-to-b from-background via-background/80 to-background"
       >
-        <div className="mx-auto w-full max-w-3xl px-3 md:px-4 py-4 md:py-8">
+        <div className="mx-auto w-full max-w-2xl px-4 py-4">
           <AnimatePresence>
             {messages.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex h-full min-h-[50vh] md:min-h-[60vh] items-center justify-center"
-              >
-                <div className="text-center px-4">
-                  <p className="text-xl md:text-2xl font-bold text-[#F2F2F2]">
-                    Я здесь. Что хочешь обсудить?
+              <div className="flex h-full min-h-[60vh] items-center justify-center">
+                <div className="text-center">
+                  <p className="text-2xl font-semibold text-foreground">
+                    Готов, когда ты готов.
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ) : (
-              <div className="space-y-4 md:space-y-6">
-                {messages.map((message, index) => (
+              <div className="space-y-6">
+                {messages.map((message) => (
                   <MessageBubble
                     key={message.id}
                     message={message}

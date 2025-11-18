@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Sparkles, Zap, BookOpen, Check } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -9,53 +9,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useChatStore } from "@/store/chat-store";
 import { ChatSettings } from "@/types/chat";
 import { cn } from "@/lib/utils";
-
-const modelOptions = [
-  { label: "OpenAI GPT-4o", value: "gpt-4o", icon: Sparkles },
-  { label: "Anthropic Claude 3", value: "claude-3", icon: Sparkles },
-  { label: "xAI Grok Beta", value: "grok-beta", icon: Sparkles },
-] as const;
-
-const modeOptions = [
-  {
-    label: "Исследование",
-    description: "Глубокие, развёрнутые ответы",
-    value: "explore",
-    icon: Sparkles,
-  },
-  {
-    label: "Быстрый ответ",
-    description: "Краткие ответы для оперативных задач",
-    value: "fast",
-    icon: Zap,
-  },
-  {
-    label: "Обучение",
-    description: "Пошаговое объяснение и закрепление",
-    value: "learn",
-    icon: BookOpen,
-  },
-] as const;
+import { ModelSelect } from "./ModelSelect";
+import { MODES } from "@/data/modes";
 
 export function QuickSettingsMenu() {
   const settings = useChatStore((state) => state.settings);
   const updateSettings = useChatStore((state) => state.updateSettings);
   const [open, setOpen] = useState(false);
+  const hasProAccess = false; // TODO: заменить на проверку подписки пользователя
 
-  const handleModelChange = (value: string) => {
-    updateSettings({ model: value as ChatSettings["model"] });
+  const handleModelChange = (value: ChatSettings["model"]) => {
+    updateSettings({ model: value });
   };
 
   const handleModeChange = (value: string) => {
@@ -102,24 +71,11 @@ export function QuickSettingsMenu() {
               <Label className="text-xs font-medium text-foreground">
                 Модель
               </Label>
-              <Select value={settings.model} onValueChange={handleModelChange}>
-                <SelectTrigger className="h-9 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {modelOptions.map((option) => {
-                    const Icon = option.icon;
-                    return (
-                      <SelectItem key={option.value} value={option.value}>
-                        <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
-                          <span>{option.label}</span>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+              <ModelSelect
+                value={settings.model}
+                onChange={(model) => handleModelChange(model)}
+                hasProAccess={hasProAccess}
+              />
             </div>
 
             <Separator />
@@ -129,13 +85,13 @@ export function QuickSettingsMenu() {
                 Режим работы
               </Label>
               <div className="space-y-2">
-                {modeOptions.map((option) => {
+                {MODES.map((option) => {
                   const Icon = option.icon;
-                  const isSelected = settings.mode === option.value;
+                  const isSelected = settings.mode === option.id;
                   return (
                     <button
-                      key={option.value}
-                      onClick={() => handleModeChange(option.value)}
+                      key={option.id}
+                      onClick={() => handleModeChange(option.id)}
                       className={cn(
                         "flex w-full items-start gap-3 rounded-lg border p-3 text-left transition",
                         isSelected
@@ -159,7 +115,7 @@ export function QuickSettingsMenu() {
                       </div>
                       <div className="flex-1 space-y-0.5">
                         <p className="text-sm font-medium text-foreground">
-                          {option.label}
+                            {option.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {option.description}

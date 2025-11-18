@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useEffect, useState } from "react";
+import { FormEvent, useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2, Paperclip } from "lucide-react";
 import { FileUploader } from "@/components/files/file-uploader";
@@ -8,6 +8,7 @@ import { QuickSettingsMenu } from "@/components/chat/QuickSettingsMenu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChatFile } from "@/types/chat";
 import { cn } from "@/lib/utils";
+import { VoiceRecorder } from "@/components/VoiceRecorder";
 
 type ChatInputProps = {
   value: string;
@@ -25,6 +26,12 @@ export function ChatInput({
   const [attachments, setAttachments] = useState<ChatFile[]>([]);
   const [showUploader, setShowUploader] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const uploaderAreaRef = useRef<HTMLDivElement>(null);
+  const latestValueRef = useRef(value);
+
+  useEffect(() => {
+    latestValueRef.current = value;
+  }, [value]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -40,6 +47,22 @@ export function ChatInput({
       textareaRef.current.focus();
     }
   }, [isStreaming]);
+
+  useEffect(() => {
+    if (!showUploader) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        uploaderAreaRef.current &&
+        !uploaderAreaRef.current.contains(event.target as Node)
+      ) {
+        setShowUploader(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showUploader]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,6 +94,26 @@ export function ChatInput({
     }
   };
 
+  const handleTranscriptInsert = useCallback(
+    (transcript: string) => {
+      const incoming = transcript.trim();
+      if (!incoming) return;
+
+      const currentValue = latestValueRef.current ?? "";
+      const trimmedCurrent = currentValue.replace(/\s+$/g, "");
+      const spacer =
+        trimmedCurrent.length === 0
+          ? ""
+          : trimmedCurrent.endsWith("\n")
+            ? ""
+            : " ";
+
+      const nextValue = `${trimmedCurrent}${spacer}${incoming}`.trimStart();
+      onChange(nextValue);
+    },
+    [onChange]
+  );
+
   const hasText = value.trim().length > 0 || attachments.length > 0;
 
   return (
@@ -97,10 +140,13 @@ export function ChatInput({
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="hidden md:block">
-          <QuickSettingsMenu />
-        </div>
-        <div className="relative flex items-center flex-1 glass-card border border-[#8A2FFF]/30 rounded-xl md:rounded-2xl shadow-[0_0_20px_rgba(138,47,255,0.2)] px-3 py-2.5 md:px-4 md:py-3 focus-within:border-[#8A2FFF]/50 focus-within:shadow-[0_0_30px_rgba(138,47,255,0.3)] transition-all duration-300">
+        <div
+          ref={uploaderAreaRef}
+          className="relative flex items-center flex-1 glass-card border border-[#8A2FFF]/30 rounded-xl md:rounded-2xl shadow-[0_0_20px_rgba(138,47,255,0.2)] px-3 py-2.5 md:px-4 md:py-3 focus-within:border-[#8A2FFF]/50 focus-within:shadow-[0_0_30px_rgba(138,47,255,0.3)] transition-all duration-300 gap-2"
+        >
+          <div className="hidden md:block">
+            <QuickSettingsMenu />
+          </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -131,38 +177,53 @@ export function ChatInput({
             className="w-full resize-none bg-transparent focus:outline-none text-[#F2F2F2] placeholder:text-[#9ca0ab] text-sm md:text-[15px] leading-[1.5] pr-2"
             style={{ minHeight: "20px", maxHeight: "120px" }}
           />
-          <AnimatePresence>
-            {hasText && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}
-                    type="submit"
+          <div className="flex items-center gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex-shrink-0">
+                  <VoiceRecorder
+                    onTranscript={handleTranscriptInsert}
                     disabled={isStreaming}
-                    className={cn(
-                      "p-1.5 md:p-2 rounded-lg transition-all duration-300 flex-shrink-0",
-                      "neon-button text-white",
-                      "disabled:opacity-50 disabled:cursor-not-allowed",
-                      "active:scale-95 md:hover:scale-105"
-                    )}
-                    aria-label="Отправить сообщение"
-                  >
-                    {isStreaming ? (
-                      <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4 md:w-5 md:h-5" />
-                    )}
-                  </motion.button>
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  <p>{isStreaming ? "Отправка сообщения..." : "Отправить сообщение"}</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </AnimatePresence>
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>Удерживайте кнопку, чтобы записать голосовое сообщение</p>
+              </TooltipContent>
+            </Tooltip>
+            <AnimatePresence>
+              {hasText && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.2 }}
+                      type="submit"
+                      disabled={isStreaming}
+                      className={cn(
+                        "p-1.5 md:p-2 rounded-lg transition-all duration-300 flex-shrink-0",
+                        "neon-button text-white",
+                        "disabled:opacity-50 disabled:cursor-not-allowed",
+                        "active:scale-95 md:hover:scale-105"
+                      )}
+                      aria-label="Отправить сообщение"
+                    >
+                      {isStreaming ? (
+                        <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4 md:w-5 md:h-5" />
+                      )}
+                    </motion.button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>{isStreaming ? "Отправка сообщения..." : "Отправить сообщение"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </form>
     </motion.div>
