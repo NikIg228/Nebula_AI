@@ -54,14 +54,18 @@ export function CallToAction() {
           transition={{ delay: 0.22, duration: 0.45 }}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          <Button size="lg" asChild className="neon-button w-full sm:w-auto text-white font-semibold">
+          <Button
+            size="lg"
+            asChild
+            className="neon-button w-full sm:w-auto text-white font-semibold tracking-tight [text-shadow:0_2px_10px_rgba(255,255,255,0.6)]"
+          >
             <Link href="/chat">Обработать документ</Link>
           </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
+          <Button
+            size="lg"
+            variant="outline"
             asChild
-            className="w-full sm:w-auto border-[#8A2FFF]/30 bg-transparent text-foreground hover:bg-[#8A2FFF]/10 hover:border-[#8A2FFF]/50 hover:text-[#C084FC] transition-all"
+            className="w-full sm:w-auto border-white/30 bg-transparent text-white font-semibold tracking-tight hover:bg-white/10 hover:border-white/60 [text-shadow:0_2px_8px_rgba(255,255,255,0.5)] transition-all"
           >
             <Link href="/about">Посмотреть возможности</Link>
           </Button>

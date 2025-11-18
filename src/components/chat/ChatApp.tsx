@@ -81,13 +81,7 @@ export function ChatApp() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col text-foreground overflow-hidden">
-      {/* Background with blur overlay */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 backdrop-blur-[8px] md:backdrop-blur-[12px] bg-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#8A2FFF]/5 via-transparent to-[#A855FF]/5" />
-      </div>
-      
+    <div className="relative flex h-screen flex-col text-foreground overflow-hidden bg-transparent">
       <div className="relative z-10 flex h-full flex-col">
         <Header
           sidebarOpen={sidebarOpen}

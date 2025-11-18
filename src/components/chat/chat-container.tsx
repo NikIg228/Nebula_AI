@@ -54,7 +54,7 @@ export function ChatContainer({
     <div className="flex flex-1 flex-col overflow-hidden">
       <div
         ref={viewportRef}
-        className="flex-1 overflow-y-auto bg-gradient-to-b from-background via-background/80 to-background"
+        className="flex-1 overflow-y-auto bg-transparent"
       >
         <div className="mx-auto w-full max-w-2xl px-4 py-4">
           <AnimatePresence>

@@ -86,18 +86,18 @@ export function Hero() {
           transition={{ delay: 0.34, duration: 0.45 }}
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          <Button 
-            size="lg" 
-            asChild 
-            className="w-full sm:w-auto neon-button text-white font-semibold"
+          <Button
+            size="lg"
+            asChild
+            className="neon-button w-full sm:w-auto text-white font-semibold tracking-tight [text-shadow:0_2px_10px_rgba(255,255,255,0.6)]"
           >
-            <Link href="/chat">Загрузить документ</Link>
+            <Link href="/chat">Открыть чат</Link>
           </Button>
           <Button
             size="lg"
             variant="outline"
             asChild
-            className="w-full sm:w-auto border-[#8A2FFF]/30 bg-transparent text-foreground hover:bg-[#8A2FFF]/10 hover:border-[#8A2FFF]/50 hover:text-[#C084FC] transition-all"
+            className="w-full sm:w-auto border-white/30 bg-transparent text-white font-semibold tracking-tight hover:bg-white/10 hover:border-white/60 [text-shadow:0_2px_8px_rgba(255,255,255,0.45)] transition-all"
           >
             <Link href="/pricing">Посмотреть тарифы</Link>
           </Button>
