@@ -33,8 +33,8 @@ export function Navbar() {
       return;
     }
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session ?? null);
+    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } | null }) => {
+      setSession(data?.session ?? null);
       setIsLoadingSession(false);
     });
 
