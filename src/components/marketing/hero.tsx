@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import ScrollVelocity from "@/components/marketing/ScrollVelocity";
 
 const heroPhrases = [
   "понимает структуру",
@@ -64,21 +63,14 @@ export function Hero() {
           </span>
         </motion.h1>
         
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.26, duration: 0.5 }}
-          className="mx-auto w-full max-w-4xl"
+          className="mx-auto w-full max-w-4xl text-base leading-relaxed text-muted-foreground sm:text-lg"
         >
-          <ScrollVelocity
-            texts={[heroDescription]}
-            velocity={60}
-            className="text-base leading-relaxed text-muted-foreground sm:text-lg"
-            numCopies={4}
-            parallaxClassName="parallax w-full"
-            scrollerClassName="scroller"
-          />
-        </motion.div>
+          {heroDescription}
+        </motion.p>
         
         <motion.div
           initial={{ opacity: 0, y: 28 }}

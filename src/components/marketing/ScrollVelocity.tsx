@@ -17,6 +17,7 @@ import {
   useRef,
   useState,
 } from "react";
+
 import "./ScrollVelocity.css";
 
 type VelocityTextProps = {
@@ -35,6 +36,8 @@ type VelocityTextProps = {
   scrollerClassName?: string;
   parallaxStyle?: CSSProperties;
   scrollerStyle?: CSSProperties;
+  lockDirection?: boolean;
+  disableScrollSync?: boolean;
 };
 
 type ScrollVelocityProps = {
@@ -53,6 +56,10 @@ type ScrollVelocityProps = {
   scrollerClassName?: string;
   parallaxStyle?: CSSProperties;
   scrollerStyle?: CSSProperties;
+  lockDirection?: boolean;
+  disableScrollSync?: boolean;
+  direction?: "ltr" | "rtl";
+  alternateDirections?: boolean;
 };
 
 function useElementWidth(ref: RefObject<HTMLElement | null>) {
@@ -93,6 +100,8 @@ function VelocityText({
   scrollerClassName = "scroller",
   parallaxStyle,
   scrollerStyle,
+  lockDirection = false,
+  disableScrollSync = false,
 }: VelocityTextProps) {
   const baseX = useMotionValue(0);
   const scrollOptions = scrollContainerRef ? { container: scrollContainerRef } : {};
@@ -105,27 +114,52 @@ function VelocityText({
     stiffness: stiffness ?? 400,
   });
 
+  const inputRange = velocityMapping?.input ?? [0, 1000];
+  const outputRange = disableScrollSync
+    ? [0, 0]
+    : velocityMapping?.output ?? [0, 5];
+
   const velocityFactor = useTransform(
     smoothVelocity,
-    velocityMapping?.input ?? [0, 1000],
-    velocityMapping?.output ?? [0, 5],
+    inputRange,
+    outputRange,
     { clamp: false }
   );
 
   const copyRef = useRef<HTMLSpanElement | null>(null);
   const copyWidth = useElementWidth(copyRef);
 
-  const directionFactor = useRef(1);
+  const initialDirection = useMemo(() => {
+    const sign = Math.sign(baseVelocity);
+    return sign === 0 ? 1 : sign;
+  }, [baseVelocity]);
+
+  const directionFactor = useRef(initialDirection);
+
+  useLayoutEffect(() => {
+    directionFactor.current = initialDirection;
+  }, [initialDirection]);
+
+  useLayoutEffect(() => {
+    if (copyWidth === 0) return;
+    if (baseVelocity < 0) {
+      baseX.set(copyWidth);
+    } else if (baseVelocity > 0) {
+      baseX.set(-copyWidth);
+    }
+  }, [baseVelocity, copyWidth, baseX]);
 
   useAnimationFrame((_, delta) => {
     let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
 
-    const factor = velocityFactor.get();
+    const factor = velocityFactor.get() as number;
 
-    if (factor < 0) {
-      directionFactor.current = -1;
-    } else if (factor > 0) {
-      directionFactor.current = 1;
+    if (!lockDirection) {
+      if (factor < 0) {
+        directionFactor.current = -1;
+      } else if (factor > 0) {
+        directionFactor.current = 1;
+      }
     }
 
     moveBy += directionFactor.current * moveBy * factor;
@@ -133,9 +167,16 @@ function VelocityText({
     baseX.set(baseX.get() + moveBy);
   });
 
+  const [wrapStart, wrapEnd] = useMemo(() => {
+    if (baseVelocity < 0) {
+      return [0, copyWidth || 0];
+    }
+    return [-copyWidth || 0, 0];
+  }, [baseVelocity, copyWidth]);
+
   const x = useTransform(baseX, (value) => {
     if (copyWidth === 0) return "0px";
-    return `${wrap(-copyWidth, 0, value)}px`;
+    return `${wrap(wrapStart, wrapEnd, value)}px`;
   });
 
   const spans = useMemo(() => {
@@ -172,13 +213,25 @@ export default function ScrollVelocity({
   scrollerClassName = "scroller",
   parallaxStyle,
   scrollerStyle,
+  lockDirection = false,
+  disableScrollSync = false,
+  direction = "ltr",
+  alternateDirections = true,
 }: ScrollVelocityProps) {
+  const baseDirectionMultiplier = direction === "rtl" ? -1 : 1;
+  const normalizedVelocity = Math.abs(velocity);
+
   return (
     <div className="w-full">
       {texts.map((text, index) => (
         <VelocityText
           key={`${text}-${index}`}
-          baseVelocity={index % 2 !== 0 ? -velocity : velocity}
+          baseVelocity={
+            alternateDirections
+              ? (index % 2 !== 0 ? -normalizedVelocity : normalizedVelocity) *
+                baseDirectionMultiplier
+              : normalizedVelocity * baseDirectionMultiplier
+          }
           scrollContainerRef={scrollContainerRef}
           className={className}
           damping={damping}
@@ -189,6 +242,8 @@ export default function ScrollVelocity({
           scrollerClassName={scrollerClassName}
           parallaxStyle={parallaxStyle}
           scrollerStyle={scrollerStyle}
+          lockDirection={lockDirection}
+          disableScrollSync={disableScrollSync}
         >
           {text}&nbsp;
         </VelocityText>
