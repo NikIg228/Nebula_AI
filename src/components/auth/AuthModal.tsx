@@ -35,10 +35,10 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     }
   }, [open]);
 
-  const emailRedirectTo =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/auth/callback`
-      : undefined;
+  const browserOrigin =
+    typeof window !== "undefined" ? window.location.origin : undefined;
+  const redirectTo =
+    process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL || browserOrigin;
 
   async function handleEmailSignIn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -91,7 +91,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       const { error } = await supabase.auth.signUp({
         email: signupEmail,
         password: signupPassword,
-        options: emailRedirectTo ? { emailRedirectTo } : undefined,
+        options: redirectTo ? { emailRedirectTo: redirectTo } : undefined,
       });
 
       if (error) {
@@ -112,7 +112,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     startTransition(async () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: emailRedirectTo ? { redirectTo: emailRedirectTo } : undefined,
+        options: redirectTo ? { redirectTo } : undefined,
       });
 
       if (error) {
